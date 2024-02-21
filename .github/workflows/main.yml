@@ -38,7 +38,10 @@ jobs:
           cache-dependency-path: ./testWebsite/package-lock.json
       - name: Install dependencies
         working-directory: ./testWebsite
-        run: npm install
+        run: |
+          npm install
+          npm uninstall ai-pay-react-hooks
+          npm install ai-pay-react-hooks
       - name: Build
         working-directory: ./testWebsite
         run: npm run build
