@@ -33,9 +33,9 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          working-directory: ./testWebsite
           node-version: 18
           cache: 'npm'
+          cache-dependency-path: ./testWebsite/package-lock.json
       - name: Install dependencies
         working-directory: ./testWebsite
         run: npm install
