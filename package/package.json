@@ -1,0 +1,40 @@
+{
+  "name": "ai-pay-react-hooks",
+  "version": "0.0.1",
+  "description": "A react hook package to interact with ai-pay",
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "watch": "tsup ./src --watch",
+    "lint": "eslint --ext .ts ./src --fix",
+    "build": "tsup ./src"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^18.2.57",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
+    "eslint": "^8.56.0",
+    "eslint-plugin-unused-imports": "^3.1.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "ai-pay": "^0.2.4",
+    "react": "^18.2.0"
+  }
+}
