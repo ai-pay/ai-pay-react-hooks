@@ -1,6 +1,79 @@
 import { ChatCompletionRequest, SupportedChatCompletionMessageParam, chatCompletionStream } from "ai-pay";
 import { useCallback, useState } from "react";
 
+export function useChatCompletionSingleQuestion(
+  modelConfig: Omit<ChatCompletionRequest, "messages"> = {
+    model: "gpt-3.5-turbo",
+  },
+  systemPrompt: string | undefined = undefined,
+  debugErrors: boolean = false
+): {
+  loading: boolean;
+  error: string | undefined;
+  streamingResponse: string | undefined;
+  askQuestion: (question: string) => void;
+} {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [streamingResponse, setStreamingResponse] = useState<string | undefined>(undefined);
+
+  const askQuestion = useCallback(async (question: string) => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+
+    try {
+      setStreamingResponse("");
+
+      let modelOutput = "";
+
+      let messages: SupportedChatCompletionMessageParam[] = [{
+        role: "user",
+        content: question,
+      }];
+
+      if (systemPrompt) {
+        messages = [{
+          role: "system",
+          content: systemPrompt,
+        },
+        ...messages];
+      }
+  
+      const response = await chatCompletionStream({
+        ...modelConfig,
+        messages,
+      }, 
+      (response) => {
+        if (response.choices[0].delta.content) {
+          modelOutput += response.choices[0].delta.content;
+          setStreamingResponse(modelOutput);
+        }
+      });
+  
+      setError(response.error);
+  
+      if (response.debugError && debugErrors) {
+        console.error("ai-pay-react-chat debug error: ", response.debugError);
+      }
+    } catch (e) {
+      setError("Failed to send message to chat completion model");
+    }
+    
+    setLoading(false);
+
+  }, [setError, setLoading, loading, systemPrompt, modelConfig, debugErrors, setStreamingResponse]);
+
+  return {
+    loading,
+    error,
+    streamingResponse,
+    askQuestion
+  };
+}
+  
+
 export function useChatCompletionStream(
   modelConfig: Omit<ChatCompletionRequest, "messages"> = {
     model: "gpt-3.5-turbo",

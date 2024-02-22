@@ -1,10 +1,15 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  target: "es2020",
-  format: ["cjs", "esm"],
-  splitting: false,
+  entry: [
+    "./src/index.ts",
+  ],
+  format: ["cjs", "esm"], // Build for commonJS and ESmodules
+  dts: true, // Generate declaration file (.d.ts)
+  treeshake: true,
+  minify: true,
+  bundle: true,
   sourcemap: true,
   clean: true,
-  dts: true
+  noExternal: [],
 });
